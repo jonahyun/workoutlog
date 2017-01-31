@@ -1,6 +1,8 @@
 $(document).ready(function() {
+	
+	//test api is working
 	$("#testAPI").on("click",function(){
-		console.log("It is working");
+		console.log("It is working"); 
 	});
 	
 	

@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "workoutlogclient",
   "version": "1.0.0",
   "description": "Workout Log",
   "main": "app.js",

@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 
 app.use(require('./middleware/headers'));
 
+//test api
 app.use('/api/test', function(req, res){
 	res.send("Hello World");
 });
