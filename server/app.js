@@ -16,7 +16,7 @@ app.listen(3000, function(){
 
 
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('workoutlog', 'postgres', 'Cincy12345', {
+var sequelize = new Sequelize('workoutlog', 'postgres', 'cooljjj3', {
 	host: 'localhost',
 	dialect: 'postgres'
 });
@@ -30,10 +30,16 @@ sequelize.authenticate().then(
 	}
 );
 
+var User = sequelize.define('user', {
+	username: Sequelize.STRING,
+	passwordhash: Sequelize.STRING
+});
 
-
+//Create the table in postgres
+//matches the model we defined
+//doesn't drop the db
 User.sync();
-//User({force:true}); //drops the table completely
+//Usersync({force:true}); //drops the table completely
 
 app.use(bodyParser.json());
 
@@ -64,7 +70,3 @@ app.post('/api/user', function(req,res){
 	);
 });
 
-var User = sequelize.define('user', {
-	username: Sequelize.STRING,
-	passwordhash: Sequelize.STRING
-});
