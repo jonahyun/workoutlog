@@ -3,7 +3,15 @@ var app = express();
 var bodyParser = require('body-parser'); 
 //help the server parse out incoming requests that are easier to work with
 
+var sequelize = require('./db.js');
+var User = sequelize.import('./models/user');
+
+User.sync(); // Warning:  sync({force:true}) will DROP the table; 
+
+app.use(bodyParser.json());
 app.use(require('./middleware/headers'));
+
+
 
 //test api
 app.use('/api/test', function(req, res){
@@ -15,39 +23,7 @@ app.listen(3000, function(){
 });
 
 
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize('workoutlog', 'postgres', 'cooljjj3', {
-	host: 'localhost',
-	dialect: 'postgres'
-});
 
-sequelize.authenticate().then(
-	function() {
-		console.log('connected to workoutlog postgres db');
-	},
-	function(err) {
-		console.log(err);
-	}
-);
-
-var User = sequelize.define('user', {
-	username: Sequelize.STRING,
-	passwordhash: Sequelize.STRING
-});
-
-//Create the table in postgres
-//matches the model we defined
-//doesn't drop the db
-
-User.sync();
-
-
-/***************
-//DANGER: THIS WILL DROP THE USER TABLE*******
-//User.sync({force:true}); 
-************/
-
-app.use(bodyParser.json());
 
 app.post('/api/user', function(req,res){
 
