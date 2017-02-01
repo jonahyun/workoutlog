@@ -11,8 +11,7 @@ User.sync(); // Warning:  sync({force:true}) will DROP the table;
 app.use(bodyParser.json());
 app.use(require('./middleware/headers'));
 app.use('/api/user', require('./routes/user'));
-
-
+app.use('/api/login', require('./routes/session'));
 
 //test api
 app.use('/api/test', function(req, res){
