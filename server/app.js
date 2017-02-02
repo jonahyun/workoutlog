@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var sequelize = require('./db.js');
 var User = sequelize.import('./models/user');
 
-User.sync(); // Warning:  sync({force:true}) will DROP the table; 
+sequelize.sync(); // Warning:  sync({force:true}) will DROP the table; 
 
 app.use(bodyParser.json());
 app.use(require('./middleware/headers'));
