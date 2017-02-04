@@ -4,7 +4,7 @@ $(function(){
 		var username = $("#su_username").val();
 		var password = $("#su_password").val();
 		//user object
-		var object = {
+		var user = {
 			user: {
 				username: username,
 				password: password
