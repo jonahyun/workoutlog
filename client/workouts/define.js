@@ -48,7 +48,7 @@ $(function() {
 
 	$("#def-save").on("click", WorkoutLog.definition.create);
 
-	// fecth definitions if we already are authenticated and refreshed
+	// fetch definitions if we already are authenticated and refreshed
 	if (window.localStorage.getItem("sessionToken")) {
 		WorkoutLog.definition.fetchAll();
 	}
