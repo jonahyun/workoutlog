@@ -5,13 +5,15 @@ var User = sequelize.import('../models/user');
 var Definition = sequelize.import('../models/definition');
 
 router.post('/', function(req, res) {
-    var description = req.body.log.desc;
+    // req has some body properties that have a username and pwd
+    var description = req.body.log.desc; 
     var result = req.body.log.result; 
     var user = req.user;
     var definition = req.body.log.def;
+   
 
-    // Use our sequlize model to create user
-   Log 
+    // Use our sequelize model to create log
+  	Log 
 	    .create({ 
 	    	description: description,
 	    	result: result,
