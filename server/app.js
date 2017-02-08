@@ -2,30 +2,28 @@ require('dotenv').config();
 
 var express = require('express');
 var app = express();
-var bodyParser = require('body-parser'); 
-//help the server parse out incoming requests that are easier to work with
+var bodyParser = require('body-parser');
+var sequelize = require('./db');
 
-var sequelize = require('./db.js');
-var User = sequelize.import('./models/user');
-
-sequelize.sync(); // Warning:  sync({force:true}) will DROP the table; 
+sequelize.sync(); // tip: {force: true} for resetting tables
 
 app.use(bodyParser.json());
+
 app.use(require('./middleware/headers'));
 app.use(require('./middleware/validate-session'));
-
-app.use('/api/user', require('./routes/user'));
-app.use('/api/login', require('./routes/session'));
-app.use('/api/definition', require('./routes/definition'));
-app.use('/api/log', require('./routes/log'));
-
-
-
-//test api
-app.use('/api/test', function(req, res){
-	res.send("Hello World");
-});
 
 app.listen(3000, function(){
 	console.log('App is listening on 3000.')
 });
+
+
+app.use('/api/user', require('./routes/user'));
+app.use('/api/login', require('./routes/session'));
+app.use('/api/log', require('./routes/log'));
+app.use('/api/definition', require('./routes/definition'));
+app.use('/api/test', function(req, res){
+	res.send("Hello World");
+});
+
+
+

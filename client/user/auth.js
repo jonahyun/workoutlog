@@ -1,5 +1,6 @@
-$(function() {
-   $.extend( WorkoutLog, {
+$(function(){
+// $(function() {
+   $.extend(WorkoutLog, {
       signup: function() {
             var username = $("#su_username").val();
             var password = $("#su_password").val();
@@ -24,10 +25,10 @@ $(function() {
 
                $("#su_username").val("");
                $("#su_password").val("");
-
             })
             .fail(function() {
                $("#su_error").text("There was an issue with your username").show();
+              
             });
       },
 
@@ -47,7 +48,9 @@ $(function() {
                WorkoutLog.definition.fetchAll();
                WorkoutLog.log.fetchAll();
             }
-            // TODO: add logic to set user and auth token   
+            // TODO: add logic to set user and auth token  
+
+
             $("#login-modal").modal("hide");
             $(".disabled").removeClass("disabled");
             $("#loginout").text("Logout");
@@ -55,6 +58,7 @@ $(function() {
             $("#li_password").val("");
 
             $('a[href="#define"]').tab("show");
+
          })
          .fail(function() {
             $("#li_error").text("There was an issue with your username or password").show();
