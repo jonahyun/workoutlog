@@ -26,7 +26,7 @@ $(function() {
          },
          create: function() {
             var itsLog = { 
-               desc: $("#log-description").val(),
+                  desc: $("#log-description").val(),
                   result: $("#log-result").val(),
                   def: $("#log-definition option:selected").text()
                };
@@ -40,6 +40,11 @@ $(function() {
 
                logger.done(function(data) {
                   WorkoutLog.log.workouts.push(data);
+                  $("#log-description").val();
+                  $("#log-result").val();
+                  $('a[href="#history]').tab("show");
+
+
                });
          },
          // history
