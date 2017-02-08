@@ -1,77 +1,70 @@
 $(function() {
-   $.extend( WorkoutLog, {
-      signup: function() {
-            var username = $("#su_username").val();
-            var password = $("#su_password").val();
-            var user = {user:  {username: username, password: password }};
-            var signup = $.ajax({
-               type: "POST", 
-               url: WorkoutLog.API_BASE + "user", 
-               data: JSON.stringify(user), 
-               contentType: "application/json"
-            });
-            signup.done(function(data) {
-               if (data.sessionToken) {
-                  WorkoutLog.setAuthHeader(data.sessionToken);
-                  WorkoutLog.definition.fetchAll();
-                  WorkoutLog.log.fetchAll();
-               }
-               $("#signup-modal").modal("hide");
-               $(".disabled").removeClass("disabled");
-               $("#loginout").text("Logout");
-               // go to define tab
-               $('.nav-tabs a[href="#define"]').tab('show');
+   $.extend(WorkoutLog, {
+      log: {
+         workouts: [],
 
-               $("#su_username").val("");
-               $("#su_password").val("");
-
-            })
-            .fail(function() {
-               $("#su_error").text("There was an issue with your username").show();
-            });
-      },
-
-      login: function() {
-         var username = $("#li_username").val();
-         var password = $("#li_password").val();
-         var user = {user:  {username: username, password: password }};
-         var login = $.ajax({
-            type: "POST", 
-            url: WorkoutLog.API_BASE + "login", 
-            data: JSON.stringify(user), 
-            contentType: "application/json"
-         });
-         login.done(function(data) {
-            if (data.sessionToken) {
-               WorkoutLog.setAuthHeader(data.sessionToken);
-               WorkoutLog.definition.fetchAll();
-               WorkoutLog.log.fetchAll();
+         setDefinitions: function() {
+            var defs = WorkoutLog.definition.userDefinitions;
+            var len = defs.length;
+            var opts;
+            for (var i = 0; i < len; i++) {
+               opts += "<option value='" + defs[i].id +"'>" + defs[i].description + "</option>";
             }
-            // TODO: add logic to set user and auth token   
-            $("#login-modal").modal("hide");
-            $(".disabled").removeClass("disabled");
-            $("#loginout").text("Logout");
-         })
-         .fail(function() {
-            $("#li_error").text("There was an issue with your username or password").show();
-            });
-      },
+            $("#log-definition").children().remove();
+            $("#log-definition").append(opts);
+         },
 
-      loginout: function() {
-         if (window.localStorage.getItem("sessionToken")) {
-            window.localStorage.removeItem("sessionToken");
-            $("#loginout").text("Login");
+         setHistory: function() {
+            var history = WorkoutLog.log.workouts;
+            var len = history.length;
+            var lis = "";
+            for (var i = 0; i < len; i++) {
+               lis += "<li class='list-group-item'>" + history[i].def + " - " + history[i].result + "</li>";
+            }
+            $("#history-list").children().remove();
+            $("#history-list").append(lis);
+         },
+         create: function() {
+            var itsLog = { 
+               desc: $("#log-description").val(),
+                  result: $("#log-result").val(),
+                  def: $("#log-definition option:selected").text()
+               };
+               var postData = { log: itsLog };
+               var logger = $.ajax({
+                  type: "POST",
+                  url: WorkoutLog.API_BASE + "log",
+                  data: JSON.stringify(postData),
+                  contentType: "application/json"
+               });
+
+               logger.done(function(data) {
+                  WorkoutLog.log.workouts.push(data);
+               });
+         },
+         // history
+         fetchAll: function() {
+            var fetchDefs = $.ajax({
+                  type: "GET",
+                  url: WorkoutLog.API_BASE + "log",
+                  headers: {
+                     "authorization": window.localStorage.getItem("sessionToken")
+                  }
+               })
+               .done(function(data) {
+                  WorkoutLog.log.workouts = data;
+               })
+               .fail(function(err) {
+                  console.log(err);
+               });
          }
       }
    });
 
-   // bind events
-   $("#login").on("click", WorkoutLog.login);
-   $("#signup").on("click", WorkoutLog.signup);
-   $("#loginout").on("click", WorkoutLog.loginout);
+   $("#log-save").on("click", WorkoutLog.log.create);
 
+      // fetch history if we already are authenticated and refreshed
    if (window.localStorage.getItem("sessionToken")) {
-      $("#loginout").text("Logout");
+      WorkoutLog.log.fetchAll();
    }
-
 });
